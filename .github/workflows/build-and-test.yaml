@@ -32,14 +32,14 @@ jobs:
   clang-format-check:
     name: clang-format-check
     runs-on: ubuntu-20.04
+    steps:
     - name: Print github workspace
         run: |
-          echo "GITHUB_WORKSPACE = $GITHUB_WORKSPACE"
           echo "github.workspace = ${{ github.workspace }}"
           echo "pr.ref = ${{github.event.pull_request.head.ref}}"
           echo "github.ref = ${{ github.ref }}"
           echo "$GITHUB_CONTEXT"
-    steps:
+    
     - name: Check out the codebase
       uses: actions/checkout@v3
 

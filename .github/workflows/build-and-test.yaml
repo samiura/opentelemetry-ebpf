@@ -31,11 +31,9 @@ concurrency:
 
 jobs:
   clang-format-check:
-    name: setup-environment
+    name: clang-format-check
     runs-on: ubuntu-20.04
     steps:
-    - name: Checks out the codebase.
-      uses: samiura/opentelemetry-ebpf
     - name: Runs format checker
       run: | 
         apt update
@@ -45,8 +43,8 @@ jobs:
   build-and-unit-test:
     name: build-and-unit-test
     runs-on: ubuntu-20.04
-    needs: [setup-environment]
+    needs: [clang-format-check]
     steps:
-    - name: Checks out the codebase.
-      uses: samiura/opentelemetry-ebpf 
-      run: echo $PUBLIC_REGISTRY $REGISTRY_IMAGE_PREFIX $BENV_IMAGE $GOPROXY.
+    - name: build-and-unit-test
+      run: |
+        echo $PUBLIC_REGISTRY $REGISTRY_IMAGE_PREFIX $BENV_IMAGE $GOPROXY.

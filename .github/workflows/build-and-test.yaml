@@ -34,11 +34,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Print github workspace
-        run: |
-          echo "github.workspace = ${{ github.workspace }}"
-          echo "pr.ref = ${{github.event.pull_request.head.ref}}"
-          echo "github.ref = ${{ github.ref }}"
-          echo "$GITHUB_CONTEXT"
+      run: |
+        echo "github.workspace = ${{ github.workspace }}"
+        echo "pr.ref = ${{github.event.pull_request.head.ref}}"
+        echo "github.ref = ${{ github.ref }}"
+        echo "$GITHUB_CONTEXT"
     
     - name: Check out the codebase
       uses: actions/checkout@v3

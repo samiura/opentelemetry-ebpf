@@ -38,8 +38,8 @@ jobs:
 
     - name: Runs format checker
       run: | 
-        apt update
-        apt install -y clang-format-11
+        sudo apt update
+        sudo apt install -y clang-format-11
         ./.github/scripts/check-clang-format.sh 
 
   build-and-unit-test:

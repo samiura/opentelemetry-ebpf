@@ -1,0 +1,50 @@
+name: build-and-test
+run-name: ${{ github.actor }} is running  GitHub Actions
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '.github/workflows/build-and-test.yaml'
+      - ' collector/**'
+      - ' render/**'
+      - ' renderc/**'
+      - ' test/kernel-headers'
+
+env:
+  PUBLIC_REGISTRY: "quay.io/signalfx"
+  REGISTRY_IMAGE_PREFIX: "splunk-network-explorer-"
+  BENV_IMAGE:
+    value: "quay.io/splunko11ytest/network-explorer-debug/benv-final:latest"
+    description: "Build environment image to use for building."
+  MAVEN_REPOSITORY_URL:
+    value: "https://repo.splunk.com/artifactory/maven"
+    description: "Maven repository used for pulling Java dependencies."
+  GOPROXY:
+    value: "https://repo.splunk.com/artifactory/go"
+    description: "Proxy used when pulling Go modules."
+
+concurrency:
+  group: build-and-test-${{ github.event.pull_request_number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  clang-format-check:
+    name: clang-format-check
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Runs format checker
+      run: | 
+        apt update
+        apt install -y clang-format-11
+        ./tools/link/check-clang-format.sh 
+
+  build-and-unit-test:
+    name: build-and-unit-test
+    runs-on: ubuntu-20.04
+    needs: [clang-format-check]
+    steps:
+    - name: build-and-unit-test
+      run: |
+        echo $PUBLIC_REGISTRY $REGISTRY_IMAGE_PREFIX $BENV_IMAGE $GOPROXY.

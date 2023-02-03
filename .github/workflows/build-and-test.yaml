@@ -48,9 +48,9 @@ jobs:
         sudo apt update
         sudo apt install -y clang-format-11
         cd ${{ github.workspace }}
-        cd .github
+        cd .github/scripts
         pwd
-   #     ./scripts/check-clang-format.sh 
+        ./check-clang-format.sh 
 
   build-and-unit-test:
     name: build-and-unit-test

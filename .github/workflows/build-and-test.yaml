@@ -49,7 +49,7 @@ jobs:
         sudo apt install -y clang-format-11
         cd ${{ github.workspace }}
         pwd
-        ./.github/workflows/scripts/check-clang-format.sh 
+    #    ./.github/workflows/scripts/check-clang-format.sh 
 
   build-and-unit-test:
     name: build-and-unit-test

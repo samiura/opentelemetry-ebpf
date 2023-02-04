@@ -63,4 +63,4 @@ jobs:
       run: |
         cd ${{ github.workspace }}
         git submodule update  --init --recursive --jobs 4
-        ./github/workflows/scripts/build.sh
+        ./.github/workflows/scripts/build.sh

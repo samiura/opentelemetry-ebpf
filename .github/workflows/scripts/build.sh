@@ -2,7 +2,7 @@
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
 
-docker run \
+docker run -t \
   -it --rm \
   --mount "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock" \
   --mount "type=bind,source=$(git rev-parse --show-toplevel),destination=/root/src,readonly" \

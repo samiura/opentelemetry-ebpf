@@ -19,7 +19,7 @@ on:
 env:
   PUBLIC_REGISTRY: quay.io/signalfx
   REGISTRY_IMAGE_PREFIX: splunk-network-explorer-
-  BENV_IMAGE: quay.io/splunko11ytest/network-explorer-debug/benv-final:latest
+  BENV_IMAGE: quay.io/splunko11ytest/network-explorer-debug/benv-final
   MAVEN_REPOSITORY_URL: https://repo.splunk.com/artifactory/maven
   GOPROXY: https://repo.splunk.com/artifactory/go
 
@@ -61,7 +61,7 @@ jobs:
     - name: build images
       run: |
         cd ${{ github.workspace }}
-        docker pull ${{ BENV_IMAGE }}
+        docker pull $BENV_IMAGE
         git submodule update  --init --recursive --jobs 4
         docker run -t \
         --rm \
@@ -70,5 +70,5 @@ jobs:
         --env EBPF_NET_SRC=/root/src \
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
-        $ {{ BENV_IMAGE }} \
+        $BENV_IMAGE \
         ../build.sh docker

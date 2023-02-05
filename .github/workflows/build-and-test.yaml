@@ -73,4 +73,16 @@ jobs:
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
         $BENV_IMAGE \
-        ../build.sh docker
+        ../build.sh docker 
+    - name: run unit tests
+      name: build images
+      run: |
+        docker run -t \
+        --rm \
+        --mount "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock" \
+        --mount "type=bind,source=$(git rev-parse --show-toplevel),destination=/root/src,readonly" \
+        --env EBPF_NET_SRC=/root/src \
+        --env EBPF_NET_OUT_DIR=/root/out \
+        --workdir=/root/out \
+        $BENV_IMAGE \
+        ../build.sh docker   

@@ -14,7 +14,7 @@ on:
       - ' render/**'
       - ' renderc/**'
       - ' test/kernel-headers'
-      - ' util'
+      - ' util/**'
 
 env:
   PUBLIC_REGISTRY: quay.io/signalfx
@@ -48,9 +48,9 @@ jobs:
         sudo apt update
         sudo apt install -y clang-format-11
         cd ${{ github.workspace }}
-    #    ./.github/workflows/scripts/check-clang-format.sh
+ #commenting out checker for now as it fails    ./.github/workflows/scripts/check-clang-format.sh
 
-  build-and-unit-test:
+  build-images:
     name: build-and-unit-test
     runs-on: ubuntu-20.04
     needs: [clang-format-check]
@@ -73,7 +73,17 @@ jobs:
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
         $BENV_IMAGE \
-        ../build.sh docker 
+        ../build.sh docker
+
+  run-unit-tests:
+    name: run-unit-tests
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout the codebase
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
     - name: run unit tests
       run: |
         docker run -t \
@@ -84,4 +94,4 @@ jobs:
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
         $BENV_IMAGE \
-        ../build.sh docker   
+        ../build.sh unit_tests test

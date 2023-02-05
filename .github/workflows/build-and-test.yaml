@@ -75,7 +75,6 @@ jobs:
         $BENV_IMAGE \
         ../build.sh docker 
     - name: run unit tests
-      name: build images
       run: |
         docker run -t \
         --rm \

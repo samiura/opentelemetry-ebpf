@@ -60,9 +60,9 @@ jobs:
 
     - name: build images
       run: |
-        cd ${{ github.workspace }}
+        echo "github.workspace = ${{ github.workspace }}"
         docker pull $BENV_IMAGE
-        git submodule update  --init --recursive --jobs 4
+        git submodule update  --init --recursive
         docker run -t \
         --rm \
         --mount "type=bind,source=/var/run/docker.sock,destination=/var/run/docker.sock" \

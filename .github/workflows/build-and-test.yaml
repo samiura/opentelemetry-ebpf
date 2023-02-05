@@ -61,6 +61,7 @@ jobs:
     - name: build images
       run: |
         cd ${{ github.workspace }}
+        docker pull ${{ BENV_IMAGE }}
         git submodule update  --init --recursive --jobs 4
         docker run -t \
         --rm \
@@ -69,5 +70,5 @@ jobs:
         --env EBPF_NET_SRC=/root/src \
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
-        build-env \
+        $ {{ BENV_IMAGE }} \
         ../build.sh docker

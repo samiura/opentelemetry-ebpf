@@ -50,8 +50,8 @@ jobs:
         cd ${{ github.workspace }}
  #commenting out checker for now as it fails    ./.github/workflows/scripts/check-clang-format.sh
 
-  build-images:
-    name: build-images
+  build-images-and-run-unit-tests:
+    name: build-and-run-unit-tests
     runs-on: ubuntu-20.04
     needs: [clang-format-check]
     steps:
@@ -74,16 +74,6 @@ jobs:
         --workdir=/root/out \
         $BENV_IMAGE \
         ../build.sh docker
-
-  run-unit-tests:
-    name: run-unit-tests
-    runs-on: ubuntu-20.04
-    needs: [clang-format-check]
-    steps:
-    - name: Checkout the codebase
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
     - name: run unit tests
       run: |

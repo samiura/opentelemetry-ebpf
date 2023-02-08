@@ -148,7 +148,7 @@ jobs:
         $BENV_IMAGE \
         ../build.sh cloud-collector
 
-   build-k8s-watcher:
+  build-k8s-watcher:
     name: build-k8s-watcher
     runs-on: ubuntu-20.04
     needs: [clang-format-check]

@@ -8,9 +8,13 @@ on:
     branches:
       - main
   pull_request:
+    paths:
+      - reducer/**
 
 env:
   BENV_IMAGE: quay.io/splunko11ytest/network-explorer-debug/benv-final
+  KERNEL_COLLECTOR_IMAGE: quay.io/splunko11ytest/network-explorer-debug/kernel-collector:bj-latest
+  REDUCER_IMAGE:  quay.io/splunko11ytest/network-explorer-debug/reducer:bj-latest
 
 
 concurrency:
@@ -214,3 +218,44 @@ jobs:
         $BENV_IMAGE \
         ../build.sh --debug --asan unit_tests test
 
+  run-kernel-header-tests:
+    name: run-kernel-header-tests
+    runs-on: ubuntu-20.04
+    on:
+      push:
+        paths:
+        - collector/kernel/**
+        - .github/**
+        branches:
+        - main
+      pull_request:
+        paths:
+        - collector/kernel/**
+    steps:
+    - name: Check out the codebase
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Print github workspace
+      run: |
+        echo "github.workspace = ${{ github.workspace }}"
+        echo "pr.ref = ${{github.event.pull_request.head.ref}}"
+        echo "github.ref = ${{ github.ref }}"
+        echo "$GITHUB_CONTEXT"
+
+    - name: run kernel headers tests for multiple linux distrobutions
+      run: |
+        sudo apt update
+        sudo apt install -y vagrant
+        sudo apt install -y vagrant-sshfs
+        vagrant plugin install vagrant
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        sudo apt update
+        sudo apt install -y packer
+        sudo apt install -y jq
+        sudo apt install -y virtualbox
+        docker pull $KERNEL_COLLECTOR_IMAGE
+        docker pull $REDUCER_IMAGE
+        ./test/kernel-headers/run-tests.sh

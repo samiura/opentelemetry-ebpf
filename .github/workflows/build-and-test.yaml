@@ -231,6 +231,7 @@ jobs:
       pull_request:
         paths:
         - collector/kernel/**
+        - .github/**
     steps:
     - name: Check out the codebase
       uses: actions/checkout@v3

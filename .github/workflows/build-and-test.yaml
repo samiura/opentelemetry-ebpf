@@ -230,13 +230,11 @@ jobs:
       id: changes
       with:
         filters: |
-          kernel:
-            - 'collector/kernel-collector/**'
           github:  
             - '.github/**'    
 
     - name: run kernel headers tests for multiple linux distributions
-      if: steps.changes.outputs.kernel == 'true' || steps.filter.outputs.github == 'true'
+      if: steps.filter.outputs.github == 'true'
       run: |
         sudo apt update
         sudo apt install -y vagrant

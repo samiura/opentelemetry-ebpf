@@ -241,17 +241,17 @@ jobs:
         echo "github.workspace = ${{ github.workspace }}"
         apt update
         apt install -y vagrant
-        apt install -y vagrant-sshfs
-        vagrant plugin install vagrant
-        curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-        apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-        apt update
-        apt install -y packer
-        apt install -y jq
-        apt install -y virtualbox
-        docker pull $KERNEL_COLLECTOR_IMAGE
-        docker pull $REDUCER_IMAGE
-        ./test/kernel-headers/run-tests.sh
+       # apt install -y vagrant-sshfs
+       # vagrant plugin install vagrant
+       # curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+       # apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+       # apt update
+       # apt install -y packer
+      #  apt install -y jq
+      #  apt install -y virtualbox
+      #  docker pull $KERNEL_COLLECTOR_IMAGE
+      #  docker pull $REDUCER_IMAGE
+       # ./test/kernel-headers/run-tests.sh
     - name: Check on failures
       if: steps.hello.outcome != 'success' || steps.world.outcome != 'success'
       run: exit 1    

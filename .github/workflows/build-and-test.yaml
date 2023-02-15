@@ -9,7 +9,6 @@ on:
       - main
   pull_request:
     paths:
-      - reducer/**
 
 env:
   BENV_IMAGE: quay.io/splunko11ytest/network-explorer-debug/benv-final

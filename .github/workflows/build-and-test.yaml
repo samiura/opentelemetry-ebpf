@@ -247,8 +247,8 @@ jobs:
        # apt install -y packer
       #  apt install -y jq
       #  apt install -y virtualbox
-      docker pull $KERNEL_COLLECTOR_IMAGE
-      docker pull $REDUCER_IMAGE
+        docker pull $KERNEL_COLLECTOR_IMAGE
+        docker pull $REDUCER_IMAGE
        # ./test/kernel-headers/run-tests.sh
     - name: Check on failures
       if: steps.hello.outcome != 'success' || steps.world.outcome != 'success'

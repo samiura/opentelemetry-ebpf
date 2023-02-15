@@ -200,7 +200,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: build unit tests with asan and debug flags on then run all tests
-      run: |shell: /usr/bin/bash -e {0}kspace = ${{ github.workspace }}"
+      run: |
         docker pull $BENV_IMAGE
         git submodule update  --init --recursive
         docker run -t \

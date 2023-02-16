@@ -238,7 +238,9 @@ jobs:
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
         brew install --cask docker
-        docker run hello-world
+        docker-machine create
+        docker-machine ls
+        docker run h:wqello-world
         docker pull $REDUCER_IMAGE
         docker pull $KERNEL_COLLECTOR_IMAGE
 

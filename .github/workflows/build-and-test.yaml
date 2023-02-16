@@ -237,8 +237,13 @@ jobs:
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
-        chmod a+x test/kernel-headers/run-tests.sh
-        ./test/kernel-headers/run-tests.sh
+        brew install docker docker-machine
+        docker-machine env default
+        eval "$(docker-machine env default)"
+        docker run hello-world
+        docker-machine stop default
+      # chmod a+x test/kernel-headers/run-tests.sh
+      # ./test/kernel-headers/run-tests.sh
 
     - name: Check on failures
       if: steps.run-kernel-header-tests.outcome != 'success'

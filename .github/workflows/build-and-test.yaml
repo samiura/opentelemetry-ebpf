@@ -237,19 +237,8 @@ jobs:
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
-        sudo apt update
-        sudo apt install -y vagrant
-        docker pull quay.io/splunko11ytest/network-explorer-debug/reducer:bj-latest 
-        docker pull quay.io/splunko11ytest/network-explorer-debug/kernel-collector:bj-latest
-        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-        sudo apt update
-        sudo apt install -y packer
-        sudo apt install -y jq
-        sudo apt install -y virtualbox
         chmod a+x test/kernel-headers/run-tests.sh
         ./test/kernel-headers/run-tests.sh
-
 
     - name: Check on failures
       if: steps.run-kernel-header-tests.outcome != 'success'

@@ -5,8 +5,10 @@
 num_shards="1"
 publish_ports="false"
 start_prometheus="false"
+running_inside_github_action="false"
 publish_otlp_grpc_metrics="true"
 publish_prometheus_metrics="false"
+image_loc="localhost:5000/reducer"
 
 docker_args=( \
   --env EBPF_NET_RUN_UNDER_GDB="${EBPF_NET_RUN_UNDER_GDB}"
@@ -84,6 +86,10 @@ while [[ "$#" -gt 0 ]]; do
       start_prometheus="true"
       ;;
 
+    --github)
+      running_inside_github_action="true"
+      ;;
+
     --tag)
       if [[ "$#" -lt 1 ]]; then
         echo "missing argument for --tag"
@@ -140,11 +146,20 @@ then
   )
 fi
 
-docker pull localhost:5000/reducer${tag}
+
+if [[ ${running_inside_github_action} == "false" ]]
+then
+  image_loc=${image_loc}${tag}
+  docker pull ${image_loc}
+else
+  image_loc="quay.io/splunko11ytest/network-explorer-debug/reducer${tag}"
+  docker pull ${image_loc}
+fi
+
 
 export container_id="$( \
-  docker create -t --rm "${docker_args[@]}" \
-    localhost:5000/reducer${tag} "${app_args[@]}" \
+    docker create -t --rm "${docker_args[@]}" \
+    ${image_loc} "${app_args[@]}" \
 )"
 
 function cleanup_docker {

@@ -4,17 +4,29 @@
 
 set -xeE
 
+image_loc="localhost:5000/reducer"
+
 trap 'catch $? $LINENO' ERR
 catch() {
   echo "Error $1 occurred at $0 line $2"
   exit $1
 }
 
-docker pull localhost:5000/reducer
+if [ $# -eq 0 ]
+then
+  docker pull ${image_loc}
+elif [ $# -eq 1 ]
+then
+  tag=":$1"
+  image_loc="quay.io/splunko11ytest/network-explorer-debug/reducer${tag}"
+  docker pull ${image_loc}    
+fi
+
+
 
 docker run --detach --rm \
   --network=host \
-  localhost:5000/reducer \
+  "${image_loc}" \
   --port 8000 \
   --prom 0.0.0.0:7000 \
   --partitions-per-shard 1 \

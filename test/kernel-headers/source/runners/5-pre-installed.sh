@@ -8,4 +8,12 @@ set -x
 
 vagrant ssh -- -- sudo rm -rf /var/cache/ebpf_net/kernel-headers || true
 vagrant ssh -- -- ./install-kernel-headers.sh
-vagrant ssh -- -R "5000:localhost:5000" -- ./agent.sh
+
+if [ $# -eq 1 ]
+then
+    vagrant ssh -- -R "5000:localhost:5000" -- ./agent.sh $1
+elif [ $# -eq 0 ]    
+then
+    vagrant ssh -- -R "5000:localhost:5000" -- ./agent.sh      
+fi
+

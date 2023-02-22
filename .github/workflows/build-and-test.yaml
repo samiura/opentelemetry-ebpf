@@ -237,15 +237,7 @@ jobs:
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
-        brew install --cask docker
-        docker-machine create
-        docker-machine ls
-        docker run h:wqello-world
-        docker pull $REDUCER_IMAGE
-        docker pull $KERNEL_COLLECTOR_IMAGE
-
-      # chmod a+x test/kernel-headers/run-tests.sh
-      # ./test/kernel-headers/run-tests.sh
+        ./test/kernel-headers/run-tests.sh bj-latest
 
     - name: Check on failures
       if: steps.run-kernel-header-tests.outcome != 'success'

@@ -22,7 +22,13 @@ do
   distro_and_kernel="${distros_and_kernels[$i]}"
   log_file=${test_dir}/"$(sed 's/ /-/g' <<<$distro_and_kernel)".log
   echo "Running kernel header tests for \"${distro_and_kernel}\"." | tee -a ${test_dir}/summary.log
-  ${EBPF_NET_SRC_ROOT}/test/kernel-headers/run-test.sh ${distro_and_kernel} 2>&1 | tee ${log_file}
+  if [[ $# == 1  ]]
+  then
+    ${EBPF_NET_SRC_ROOT}/test/kernel-headers/run-test.sh ${distro_and_kernel} $1 $1 2>&1 | tee ${log_file}
+  else
+    ${EBPF_NET_SRC_ROOT}/test/kernel-headers/run-test.sh ${distro_and_kernel} 2>&1 | tee ${log_file}
+  fi 
+  
   if [[ $? == 0 ]]
   then
     echo -e "Tests succeeded for \"${distro_and_kernel}\".\n" | tee -a ${test_dir}/summary.log

@@ -8,7 +8,7 @@ set -x
 
 source ${EBPF_NET_SRC_ROOT}/test/kernel-headers/distros-and-kernels.sh
 
-test_dir="$(mktemp --tmpdir -d kernel-header-tests-$(date +%Y-%m-%d-%H-%M)-XXX)"
+test_dir="$(mktemp -t -d kernel-header-tests-$(date +%Y-%m-%d-%H-%M)-XXX)"
 cd ${test_dir}
 
 touch ${test_dir}/summary.log
@@ -27,8 +27,8 @@ do
     ${EBPF_NET_SRC_ROOT}/test/kernel-headers/run-test.sh ${distro_and_kernel} $1 $1 2>&1 | tee ${log_file}
   else
     ${EBPF_NET_SRC_ROOT}/test/kernel-headers/run-test.sh ${distro_and_kernel} 2>&1 | tee ${log_file}
-  fi 
-  
+  fi
+
   if [[ $? == 0 ]]
   then
     echo -e "Tests succeeded for \"${distro_and_kernel}\".\n" | tee -a ${test_dir}/summary.log

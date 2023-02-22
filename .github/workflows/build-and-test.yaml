@@ -218,6 +218,8 @@ jobs:
   run-kernel-header-tests:
     name: run-kernel-header-tests
     runs-on: macos-12
+    env:
+      EBPF_NET_SRC_ROOT: ${{ github.workspace }}
     steps:
     - name: Check out the codebase
       uses: actions/checkout@v3
@@ -239,6 +241,3 @@ jobs:
       run: |
         ./test/kernel-headers/run-tests.sh bj-latest
 
-    - name: Check on failures
-      if: steps.run-kernel-header-tests.outcome != 'success'
-      run: exit 1

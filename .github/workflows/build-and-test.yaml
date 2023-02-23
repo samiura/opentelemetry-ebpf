@@ -87,7 +87,7 @@ jobs:
 
     - name: build kernel-collector
       env:
-        PASS: {{ secrets.DOCKER_HUB_PASSWORD }}
+        PASS: ${{ secrets.DOCKER_HUB_PASSWORD }}
       run: |
         echo "github.workspace = ${{ github.workspace }}"
         docker pull $BENV_IMAGE

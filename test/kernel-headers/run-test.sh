@@ -8,6 +8,8 @@ export EBPF_NET_SRC_ROOT="${EBPF_NET_SRC_ROOT:-$(git rev-parse --show-toplevel)}
 source "${EBPF_NET_SRC_ROOT}/dev/script/bash-error-lib.sh"
 set -x
 
+echo $DOCKER_HUB_PATH
+
 function print {
   echo "===================================== $1 ====================================="
 }
@@ -32,9 +34,14 @@ cd ${name}
 print "running 0-setup.sh"
 ./0-setup.sh ${tag}
 print "running 1-start-reducer.sh"
-./1-start-reducer.sh ${tag}
-print "running 2-apply-selinux-policy.sh"
-./2-apply-selinux-policy.sh
+./1-start-reducer.sh ${tag} $DOCKER_HUB_PATH
+
+## this script should only be run for SE linux. Currently only centos-7 is an SE. 
+if [ "$distro" == "centos" ] 
+then
+  print "running 2-apply-selinux-policy.sh"
+  ./2-apply-selinux-policy.sh
+fi  
 # Ubuntu Jammy cannot automatically fetch headers currently because kernel-collector with bitnami/minideb:buster
 # base image does not support zstd compression
 is_jammy=$(grep jammy <<<$version) || true
@@ -43,12 +50,12 @@ then
   print "SKIPPING 3-fetch.sh and 4-cached.sh for ${name}"
 else
   print "running 3-fetch.sh"
-  ./3-fetch.sh ${tag}
+  ./3-fetch.sh ${tag} $DOCKER_HUB_PATH
   print "running 4-cached.sh"
-  ./4-cached.sh ${tag}
+  ./4-cached.sh ${tag} $DOCKER_HUB_PATH
 fi
 print "running 5-pre-installed.sh"
-./5-pre-installed.sh ${tag}
+./5-pre-installed.sh ${tag} $DOCKER_HUB_PATH
 print "running 6-cleanup.sh"
 ./6-cleanup.sh
 print "Testing of ${name} succeeded"

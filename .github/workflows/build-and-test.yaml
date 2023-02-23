@@ -11,9 +11,9 @@ on:
     paths:
 
 env:
-  BENV_IMAGE: quay.io/splunko11ytest/network-explorer-debug/benv-final
-  KERNEL_COLLECTOR_IMAGE: quay.io/splunko11ytest/network-explorer-debug/kernel-collector:bj-latest 
-  REDUCER_IMAGE: quay.io/splunko11ytest/network-explorer-debug/reducer:bj-latest
+  BENV_IMAGE: ${DOCKER_HUB_URL}/benv-final
+  KERNEL_COLLECTOR_IMAGE: ${DOCKER_HUB_URL}/kernel-collector:bj-latest 
+  REDUCER_IMAGE: ${DOCKER_HUB_URL}/reducer:bj-latest
 
 concurrency:
   group: build-and-test-${{ github.event.pull_request_number || github.ref }}
@@ -220,6 +220,7 @@ jobs:
     runs-on: macos-12
     env:
       EBPF_NET_SRC_ROOT: ${{ github.workspace }}
+      DOCKER_HUB_PATH: $DOCKER_HUB_URL
     steps:
     - name: Check out the codebase
       uses: actions/checkout@v3

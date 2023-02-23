@@ -6,9 +6,11 @@ export EBPF_NET_SRC_ROOT="${EBPF_NET_SRC_ROOT:-$(git rev-parse --show-toplevel)}
 set -o pipefail
 set -x
 
+echo $DOCKER_HUB_PATH
+
 source ${EBPF_NET_SRC_ROOT}/test/kernel-headers/distros-and-kernels.sh
 
-test_dir="$(mktemp -t -d kernel-header-tests-$(date +%Y-%m-%d-%H-%M)-XXX)"
+test_dir="$(mktemp -d /tmp/kernel-header-tests-$(date +%Y-%m-%d-%H-%M)-XXX)"
 cd ${test_dir}
 
 touch ${test_dir}/summary.log

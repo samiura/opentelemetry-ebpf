@@ -9,8 +9,6 @@ ingest_dump_file='ingest.render.raw'
 host_data_mount_path="$(pwd)/data-$(basename "$0" .sh)"
 container_data_mount_path="/hostfs/data"
 collector_entrypoint="/srv/collector-entrypoint.sh"
-image_loc="localhost:5000/kernel-collector"
-running_inside_github_action="false"
 
 minidump_dir="minidump"
 
@@ -57,7 +55,6 @@ function print_help {
   echo "  --tag: use the kernel-collector image with the specified tag (--tag <TAG>)"
   echo '  --valgrind-memcheck: run the kernel collector under `valgrind` using the memcheck tool'
   echo '  --valgrind-massif: run the kernel collector under `valgrind` using the massif tool'
-  echo "  --github: if and only if this script is run inside an actual github action"
   echo
   echo "note: use '$HOME/out/tools/bpf_wire_to_json' to decode eBPF messages"
   sleep 5
@@ -110,10 +107,6 @@ while [[ "$#" -gt 0 ]]; do
       docker_args+=(--env EBPF_NET_RECORD_INTAKE_OUTPUT_PATH="${container_data_mount_path}/${ingest_dump_file}")
       ;;
 
-    --github)
-      running_inside_github_action="true"
-      ;;
-
     --tag)
       if [[ "$#" -lt 1 ]]; then
         echo "missing argument for --tag"
@@ -154,18 +147,11 @@ docker_args+=(
 
 set -x
 
-if [[ ${running_inside_github_action} == "false" ]]
-then
-  image_loc=${image_loc}${tag}
-  docker pull ${image_loc}
-else
-  image_loc="quay.io/splunko11ytest/network-explorer-debug/kernel-collector${tag}"
-  docker pull ${image_loc}
-fi
+docker pull localhost:5000/kernel-collector${tag}
 
 export container_id="$( \
   docker create -t --rm "${docker_args[@]}" \
-    ${image_loc} "${app_args[@]}" \
+    localhost:5000/kernel-collector${tag} "${app_args[@]}" \
 )"
 
 function cleanup_docker {

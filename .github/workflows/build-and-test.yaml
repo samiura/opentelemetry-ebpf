@@ -12,8 +12,6 @@ on:
 
 env:
   BENV_IMAGE: ${{ vars.DOCKER_HUB_URL }}/benv-final
-  KERNEL_COLLECTOR_IMAGE: ${{ vars.DOCKER_HUB_URL }}/kernel-collector:bj-latest 
-  REDUCER_IMAGE: ${{ vars.DOCKER_HUB_URL }}/reducer:bj-latest
 
 concurrency:
   group: build-and-test-${{ github.event.pull_request_number || github.ref }}
@@ -66,8 +64,14 @@ jobs:
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
         $BENV_IMAGE \
-        ../build.sh reducer
-
+        ../build.sh reducer-docker
+        git_branch="${GITHUB_REF#refs/*/}"
+        git_ssh=$GITHUB_SHA | cut -c1-7
+        docker login ${{ vars.DOCKER_HUB }} -u ${{ vars.DOCKER_HUB_USERNAME }} -p ${{ vars.DOCKER_HUB_PASSWORD }}
+        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:$git_branch-$git_ssh
+        echo $reducer_image
+        docker tag reducer:latest $reducer_image
+        docker push $reducer_image
 
   build-kernel-collector:
     name: build-kernel-collector
@@ -92,7 +96,15 @@ jobs:
         --env EBPF_NET_OUT_DIR=/root/out \
         --workdir=/root/out \
         $BENV_IMAGE \
-        ../build.sh kernel-collector
+        ../build.sh kernel-collector-docker
+        git_branch="${GITHUB_REF#refs/*/}"
+        git_ssh=$GITHUB_SHA | cut -c1-7
+        docker login ${{ vars.DOCKER_HUB }} -u ${{ vars.DOCKER_HUB_USERNAME }} -p ${{ vars.DOCKER_HUB_PASSWORD }}
+        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/reducer:$git_branch-$git_ssh
+        echo $kernel_collector_image
+        docker tag kernel-collector:latest $kernel_collector_image
+        docker push $kernel_collector_image
+
 
   build-k8s-relay:
     name: build-k8s-relay
@@ -218,6 +230,7 @@ jobs:
 
   run-kernel-header-tests:
     name: run-kernel-header-tests
+    needs: [build-reducer, build-kernel-collector]
     runs-on: macos-12
     env:
       EBPF_NET_SRC_ROOT: ${{ github.workspace }}
@@ -241,5 +254,8 @@ jobs:
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
-        ./test/kernel-headers/run-tests.sh bj-latest
+        git_branch="${GITHUB_REF#refs/*/}"
+        git_ssh=$GITHUB_SHA | cut -c1-7
+        tag=$git-branch-$git-ssh
+        ./test/kernel-headers/run-tests.sh $tag
 

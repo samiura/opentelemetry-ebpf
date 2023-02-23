@@ -14,15 +14,14 @@ catch() {
 
 if [ $# -eq 0 ]
 then
-  docker pull ${image_loc}
-elif [ $# -eq 1 ]
+  sudo docker pull ${image_loc}
+elif [ $# -eq 2 ]
 then
   tag=":$1"
-  image_loc="quay.io/splunko11ytest/network-explorer-debug/reducer${tag}"
-  docker pull ${image_loc}    
+  docker_hub_path="$2"
+  image_loc="$docker_hub_path/reducer${tag}"
+  sudo docker pull ${image_loc}    
 fi
-
-
 
 docker run --detach --rm \
   --network=host \

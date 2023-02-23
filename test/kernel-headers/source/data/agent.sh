@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 set -xe
+echo $DOCKER_HUB_PATH
 
 image_loc="localhost:5000/kernel-collector"
 container_name="test-kernel-collector"
@@ -16,12 +17,14 @@ fi
 
 if [ $# -eq 0 ]
 then
-  docker pull ${image_loc}
-elif [ $# -eq 1 ]
+  sudo docker pull ${image_loc}
+elif [ $# -eq 2 ]
 then
   tag=":$1"
-  image_loc="quay.io/splunko11ytest/network-explorer-debug/kernel-collector${tag}"
-  docker pull ${image_loc}    
+  docker_hub_path="$2"
+  image_loc="$docker_hub_path/kernel-collector${tag}"
+  echo $image_loc
+  sudo docker pull ${image_loc}    
 fi
 
 

@@ -41,7 +41,7 @@ jobs:
         ./.github/workflows/scripts/check-clang-format.sh
 
   build-reducer:
-    name: build-reducer
+    name: build-and-push-reducer-docker-image
     runs-on: ubuntu-20.04
     needs: [clang-format-check]
     steps:
@@ -49,6 +49,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+
+    - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
     - name: build reducer
       env:
@@ -67,16 +71,14 @@ jobs:
         --workdir=/root/out \
         $BENV_IMAGE \
         ../build.sh reducer-docker
-        git_branch="${GITHUB_REF#refs/*/}"
-        git_ssh=$GITHUB_SHA | cut -c1-7
         docker login ${{ vars.DOCKER_HUB }} -u ${{ vars.DOCKER_HUB_USERNAME }} -p "$PASS"
-        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:$git_branch-$git_ssh
+        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:${{ steps.date.outputs.date }}-${GITHUB_SHA:0:7}
         echo $reducer_image
         docker tag reducer:latest $reducer_image
         docker push $reducer_image
 
   build-kernel-collector:
-    name: build-kernel-collector
+    name: build-and-push-kernel-collector-docker-image
     runs-on: ubuntu-20.04
     needs: [clang-format-check]
     steps:
@@ -84,6 +86,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+
+    - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
     - name: build kernel-collector
       env:
@@ -101,10 +107,8 @@ jobs:
         --workdir=/root/out \
         $BENV_IMAGE \
         ../build.sh kernel-collector-docker
-        git_branch="${GITHUB_REF#refs/*/}"
-        git_ssh=$GITHUB_SHA | cut -c1-7
         docker login ${{ vars.DOCKER_HUB }} -u ${{ vars.DOCKER_HUB_USERNAME }} -p "$PASS"
-        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/reducer:$git_branch-$git_ssh
+        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/reducer:${{ steps.date.outputs.date }}-${GITHUB_SHA:0:7}
         echo $kernel_collector_image
         docker tag kernel-collector:latest $kernel_collector_image
         docker push $kernel_collector_image
@@ -254,12 +258,15 @@ jobs:
           github:
             - '.github/**'
 
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
     - name: Run kernel headers test for multiple linux distributions
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
         git_branch="${GITHUB_REF#refs/*/}"
         git_ssh=$GITHUB_SHA | cut -c1-7
-        tag=$git-branch-$git-ssh
-        ./test/kernel-headers/run-tests.sh $tag
+        ./test/kernel-headers/run-tests.sh ${{ steps.date.outputs.date }}-${GITHUB_SHA:0:7}
 

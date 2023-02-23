@@ -51,8 +51,8 @@ jobs:
         fetch-depth: 0
 
     - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
     - name: build reducer
       env:
@@ -88,8 +88,8 @@ jobs:
         fetch-depth: 0
 
     - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
     - name: build kernel-collector
       env:

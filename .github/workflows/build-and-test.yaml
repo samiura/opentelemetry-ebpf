@@ -71,8 +71,8 @@ jobs:
         --workdir=/root/out \
         $BENV_IMAGE \
         ../build.sh reducer-docker
-        docker login ${{ vars.DOCKER_HUB }} -u ${{ vars.DOCKER_HUB_USERNAME }} -p "$PASS"
-        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:${{ steps.date.outputs.date }}-${GITHUB_REF#refs/*/}-${GITHUB_SHA:0:7}
+        docker login ${{ vars.DOCKER_HUB }} -u ${{ secrets.DOCKER_HUB_USERNAME }} -p "$PASS"
+        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:${{ steps.date.outputs.date }}-${GITHUB_BASE_REF}-${GITHUB_SHA:0:7}
         echo $reducer_image
         docker tag reducer:latest $reducer_image
         docker push $reducer_image
@@ -107,8 +107,8 @@ jobs:
         --workdir=/root/out \
         $BENV_IMAGE \
         ../build.sh kernel-collector-docker
-        docker login ${{ vars.DOCKER_HUB }} -u ${{ vars.DOCKER_HUB_USERNAME }} -p "$PASS"
-        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/kernel-collector:${{ steps.date.outputs.date }}-${GITHUB_REF#refs/*/}-${GITHUB_SHA:0:7}
+        docker login ${{ vars.DOCKER_HUB }} -u ${{ secrets.DOCKER_HUB_USERNAME }} -p "$PASS"
+        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/kernel-collector:${{ steps.date.outputs.date }}-${GITHUB_BASE_REF}-${GITHUB_SHA:0:7}
         echo $kernel_collector_image
         docker tag kernel-collector:latest $kernel_collector_image
         docker push $kernel_collector_image
@@ -268,5 +268,5 @@ jobs:
       run: |
         git_branch=""
         git_ssh=$GITHUB_SHA | cut -c1-7
-        ./test/kernel-headers/run-tests.sh ${{ steps.date.outputs.date }}-${GITHUB_REF#refs/*/}-${GITHUB_SHA:0:7}
+        ./test/kernel-headers/run-tests.sh ${{ steps.date.outputs.date }}-${GITHUB_BASE_REF}-${GITHUB_SHA:0:7}
 

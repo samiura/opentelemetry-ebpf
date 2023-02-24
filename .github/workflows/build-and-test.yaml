@@ -40,7 +40,7 @@ jobs:
         cd ${{ github.workspace }}
         ./.github/workflows/scripts/check-clang-format.sh
 
-  build-reducer:
+  build-and-push-reducer-docker-image:
     name: build-and-push-reducer-docker-image
     runs-on: ubuntu-20.04
     needs: [clang-format-check]
@@ -54,7 +54,7 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-    - name: build reducer
+    - name: build-and-push-reducer-docker-image
       env:
         PASS: ${{ secrets.DOCKER_HUB_PASSWORD }}
       run: |
@@ -77,7 +77,7 @@ jobs:
         docker tag reducer:latest $reducer_image
         docker push $reducer_image
 
-  build-kernel-collector:
+  build-and-push-kernel-collector-docker-image:
     name: build-and-push-kernel-collector-docker-image
     runs-on: ubuntu-20.04
     needs: [clang-format-check]
@@ -91,7 +91,7 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-    - name: build kernel-collector
+    - name: build-and-push-kernel-collector-docker-image
       env:
         PASS: ${{ secrets.DOCKER_HUB_PASSWORD }}
       run: |
@@ -238,7 +238,7 @@ jobs:
 
   run-kernel-header-tests:
     name: run-kernel-header-tests
-    needs: [build-reducer, build-kernel-collector]
+    needs: [build-and-push-reducer-docker-image, build-and-push-kernel-collector-docker-image]
     runs-on: macos-12
     env:
       EBPF_NET_SRC_ROOT: ${{ github.workspace }}

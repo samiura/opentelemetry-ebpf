@@ -52,12 +52,7 @@ jobs:
 
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF})"
-      id: extract_branch
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
     - name: build-and-push-reducer-docker-image
       env:
@@ -94,12 +89,7 @@ jobs:
 
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF})"
-      id: extract_branch
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
     - name: build-and-push-kernel-collector-docker-image
       env:
@@ -270,16 +260,10 @@ jobs:
 
     - name: Get current date
       id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
-    - name: Extract branch name
-      shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF})"
-      id: extract_branch
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
     - name: Run kernel headers test for multiple linux distributions
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
         ./test/kernel-headers/run-tests.sh ${{ steps.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
-

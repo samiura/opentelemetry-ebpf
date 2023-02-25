@@ -79,6 +79,8 @@ jobs:
         echo $reducer_image
         docker tag reducer:latest $reducer_image
         docker push $reducer_image
+    outputs:
+      date: ${{ needs.clang-format-check.outputs.date }}
 
   build-and-push-kernel-collector-docker-image:
     name: build-and-push-kernel-collector-docker-image
@@ -261,4 +263,4 @@ jobs:
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
-        ./test/kernel-headers/run-tests.sh ${{ needs.clang-format-check.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
+        ./test/kernel-headers/run-tests.sh ${{ needs.build-and-push-reducer-docker-image.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}

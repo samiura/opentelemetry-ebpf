@@ -17,7 +17,6 @@ then
   sudo docker pull ${image_loc}
 elif [ $# -eq 2 ]
 then
-  cat /etc/resolv.conf
   tag=":$1"
   docker_hub_path="$2"
   image_loc="$docker_hub_path/reducer${tag}"

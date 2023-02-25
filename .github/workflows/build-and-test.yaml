@@ -44,6 +44,9 @@ jobs:
         cd ${{ github.workspace }}
         ./.github/workflows/scripts/check-clang-format.sh
 
+    outputs:
+      date: ${{ steps.date.outputs.date }}        
+
   build-and-push-reducer-docker-image:
     name: build-and-push-reducer-docker-image
     runs-on: ubuntu-20.04
@@ -72,7 +75,7 @@ jobs:
         $BENV_IMAGE \
         ../build.sh reducer-docker
         docker login ${{ vars.DOCKER_HUB }} -u ${{ secrets.DOCKER_HUB_USERNAME }} -p "$PASS"
-        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:${{ jobs.clang-format-check.steps.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
+        reducer_image=${{ vars.DOCKER_HUB_URL }}/reducer:${{ needs.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
         echo $reducer_image
         docker tag reducer:latest $reducer_image
         docker push $reducer_image
@@ -104,7 +107,7 @@ jobs:
         $BENV_IMAGE \
         ../build.sh kernel-collector-docker
         docker login ${{ vars.DOCKER_HUB }} -u ${{ secrets.DOCKER_HUB_USERNAME }} -p "$PASS"
-        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/kernel-collector:${{ jobs.clang-format-check.steps.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
+        kernel_collector_image=${{ vars.DOCKER_HUB_URL }}/kernel-collector:${{ needs.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
         echo $kernel_collector_image
         docker tag kernel-collector:latest $kernel_collector_image
         docker push $kernel_collector_image
@@ -262,4 +265,4 @@ jobs:
       id: run-kernel-header-tests
       if: steps.changes.outputs.kernel == 'true' || steps.changes.outputs.github == 'true'
       run: |
-        ./test/kernel-headers/run-tests.sh ${{ jobs.clang-format-check.steps.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}
+        ./test/kernel-headers/run-tests.sh ${{ needs.date.outputs.date }}-${{github.event.pull_request.head.ref}}-${GITHUB_SHA:0:7}

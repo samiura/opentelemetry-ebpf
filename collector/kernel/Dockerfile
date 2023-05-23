@@ -35,7 +35,7 @@ RUN if [ "$BUILD_TYPE" = "Debug" ]; then \
 #/lib/modules/4.18.0-372.49.1.el8_6.x86_64
 
 COPY --from=copier /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64 /usr/src
-COPY --from=copier /lib/modules/4.18.0-372.49.1.el8_6.x86_64 /lib/modules
+COPY --from=copier /lib/modules/4.18.0-372.49.1.rt7.206.el8_6.x86_64  /lib/modules/
 
 
 COPY srv /srv

@@ -1,7 +1,15 @@
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
 
+
+
+FROM quay.io/splunko11ytest/network-explorer-debug/rhcos:latest AS copier
+COPY /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64 /usr/src
+COPY /lib/modules/4.18.0-372.49.1.el8_6.x86_64 /lib/modules
+
+
 FROM bitnami/minideb:bullseye
+
 
 LABEL org.label-schema.name="opentelemetry-ebpf-kernel-collector"
 LABEL org.label-schema.description="OpenTelemetry eBPF kernel information collector"
@@ -25,6 +33,11 @@ ARG BUILD_TYPE
 RUN if [ "$BUILD_TYPE" = "Debug" ]; then \
       install_packages bc cgdb gawk gdb gzip iputils-ping jq netcat-openbsd procps ripgrep vim valgrind; \
     fi
+
+
+#/usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64
+#/lib/modules/4.18.0-372.49.1.el8_6.x86_64
+
 
 COPY srv /srv
 WORKDIR /srv

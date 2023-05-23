@@ -24,6 +24,7 @@ kernel_headers_lib_modules_path="${kernel_headers_lib_modules_base_path}/${kerne
 kernel_headers_beacon_path=( \
   "build/include/linux/tcp.h"
   "source/include/linux/tcp.h"
+  /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64/include/linux/tcp.h
 )
 
 entrypoint_error=""

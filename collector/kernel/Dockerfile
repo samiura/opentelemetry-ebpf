@@ -4,10 +4,6 @@
 
 
 FROM quay.io/splunko11ytest/network-explorer-debug/rhcos:latest AS copier
-COPY /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64 /usr/src
-COPY /lib/modules/4.18.0-372.49.1.el8_6.x86_64 /lib/modules
-
-
 FROM bitnami/minideb:bullseye
 
 
@@ -37,6 +33,9 @@ RUN if [ "$BUILD_TYPE" = "Debug" ]; then \
 
 #/usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64
 #/lib/modules/4.18.0-372.49.1.el8_6.x86_64
+
+COPY --from=copier /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64 /usr/src
+COPY --from=copier /lib/modules/4.18.0-372.49.1.el8_6.x86_64 /lib/modules
 
 
 COPY srv /srv

@@ -20,7 +20,7 @@ ENV EBPF_NET_INSTALL_DIR=/srv
 ENV EBPF_NET_HOST_DIR=/hostfs
 ENV EBPF_NET_DATA_DIR=/var/run/ebpf_net
 
-#ENTRYPOINT [ "/srv/entrypoint.sh" ]
+ENTRYPOINT [ "/srv/entrypoint.sh" ]
 
 # required by kernel_headers.sh script
 RUN install_packages coreutils curl sed tar dnf rpm

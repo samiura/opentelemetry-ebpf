@@ -24,7 +24,6 @@ kernel_headers_lib_modules_path="${kernel_headers_lib_modules_base_path}/${kerne
 kernel_headers_beacon_path=( \
   "build/include/linux/tcp.h"
   "source/include/linux/tcp.h"
-  "include/linux/tcp.h"
 )
 
 entrypoint_error=""
@@ -37,6 +36,7 @@ function check_kernel_headers_installed {
   fi
 
   for header_file in "${kernel_headers_beacon_path[@]}"; do
+    echo 
     if [[ -e "${base_dir}/${header_file}" ]]; then
       return 0
     fi

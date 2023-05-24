@@ -33,12 +33,11 @@ RUN if [ "$BUILD_TYPE" = "Debug" ]; then \
 COPY --from=copier /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64/ /usr/src/4.18.0-372.49.1.el8_6.x86_64
 COPY --from=copier /lib/modules/4.18.0-372.49.1.el8_6.x86_64/ /lib/modules/4.18.0-372.49.1.el8_6.x86_64
 
-ENTRYPOINT [ "/bin/bash" ]
 
-#COPY srv /srv
-#WORKDIR /srv
+COPY srv /srv
+WORKDIR /srv
 
 
-#RUN if [ ! -e /srv/kernel-collector ]; then \
-#      ln /srv/kernel-collector-stripped /srv/kernel-collector; \
-#    fi
+RUN if [ ! -e /srv/kernel-collector ]; then \
+      ln /srv/kernel-collector-stripped /srv/kernel-collector; \
+    fi

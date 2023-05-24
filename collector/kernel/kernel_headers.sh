@@ -24,13 +24,14 @@ kernel_headers_lib_modules_path="${kernel_headers_lib_modules_base_path}/${kerne
 kernel_headers_beacon_path=( \
   "build/include/linux/tcp.h"
   "source/include/linux/tcp.h"
+  "include/linux/tcp.h"
 )
 
 entrypoint_error=""
 kernel_headers_source="unknown"
 
 function check_kernel_headers_installed {
-  base_dir="${kernel_headers_lib_modules_path}"
+  base_dir="${kernel_headers_usr_src_base_path}"
   if [[ -n "$1" ]]; then
     base_dir="$1"
   fi

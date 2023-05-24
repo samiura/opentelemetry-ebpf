@@ -37,6 +37,7 @@ COPY --from=copier /lib/modules/4.18.0-372.49.1.el8_6.x86_64 /lib/modules/
 #COPY srv /srv
 #WORKDIR /srv
 CMD ls -ltrah /lib/modules
+ENTRYPOINT /bin/bash
 
 
 #RUN if [ ! -e /srv/kernel-collector ]; then \

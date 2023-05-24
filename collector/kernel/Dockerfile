@@ -34,8 +34,11 @@ COPY --from=copier /usr/src/kernels/4.18.0-372.49.1.el8_6.x86_64 /usr/src
 COPY --from=copier /lib/modules/4.18.0-372.49.1.el8_6.x86_64 /lib/modules/
 
 
-COPY srv /srv
-WORKDIR /srv
+#COPY srv /srv
+#WORKDIR /srv
+CMD ls -ltrah /lib/modules
+
+
 #RUN if [ ! -e /srv/kernel-collector ]; then \
 #      ln /srv/kernel-collector-stripped /srv/kernel-collector; \
 #    fi

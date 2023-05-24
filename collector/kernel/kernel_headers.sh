@@ -7,7 +7,7 @@ set -xe
 kernel_headers_info_path="$1"
 kernel_version="$(uname -r)"
 
-kernel_headers_usr_src_base_path="/usr/src"
+kernel_headers_usr_src_base_path="/usr/src/4.18.0-372.49.1.el8_6.x86_64"
 kernel_headers_lib_modules_base_path="/lib/modules"
 
 host_dir="${EBPF_NET_HOST_DIR:-/hostfs}"

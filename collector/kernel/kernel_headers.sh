@@ -7,7 +7,7 @@ set -xe
 kernel_headers_info_path="$1"
 kernel_version="$(uname -r)"
 
-kernel_headers_usr_src_base_path="/usr/src/4.18.0-372.49.1.el8_6.x86_64"
+kernel_headers_usr_src_base_path="/usr/src"
 kernel_headers_lib_modules_base_path="/lib/modules"
 
 host_dir="${EBPF_NET_HOST_DIR:-/hostfs}"
@@ -24,20 +24,18 @@ kernel_headers_lib_modules_path="${kernel_headers_lib_modules_base_path}/${kerne
 kernel_headers_beacon_path=( \
   "build/include/linux/tcp.h"
   "source/include/linux/tcp.h"
-  "include/linux/tcp.h"
 )
 
 entrypoint_error=""
 kernel_headers_source="unknown"
 
 function check_kernel_headers_installed {
-  base_dir="${kernel_headers_usr_src_base_path}"
+  base_dir="${kernel_headers_lib_modules_path}"
   if [[ -n "$1" ]]; then
     base_dir="$1"
   fi
 
   for header_file in "${kernel_headers_beacon_path[@]}"; do
-    echo 
     if [[ -e "${base_dir}/${header_file}" ]]; then
       return 0
     fi
